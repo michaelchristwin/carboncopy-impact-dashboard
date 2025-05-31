@@ -67,6 +67,12 @@ const lineChartConfig = {
   },
 } satisfies ChartConfig;
 
+const options = [
+  { id: "option1", label: "All" },
+  { id: "option2", label: "On-Chain" },
+  { id: "option3", label: "Off-Chain" },
+];
+
 function RouteComponent() {
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">

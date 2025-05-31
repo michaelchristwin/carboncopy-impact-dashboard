@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Loader } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -98,7 +98,19 @@ export function AppSidebar() {
                                   isActive={subItem.isActive}
                                   className={`data-[status=active]:text-yellow-500 data-[status=active]:font-semibold text-[15px]`}
                                 >
-                                  <Link to={subItem.url}>{subItem.title}</Link>
+                                  <Link to={subItem.url}>
+                                    {({ isTransitioning }) => (
+                                      <span>
+                                        {subItem.title}{" "}
+                                        {isTransitioning && (
+                                          <Loader
+                                            className="animate-spin"
+                                            size={15}
+                                          />
+                                        )}
+                                      </span>
+                                    )}
+                                  </Link>
                                 </SidebarMenuButton>
                               </SidebarMenuItem>
                             ))}
