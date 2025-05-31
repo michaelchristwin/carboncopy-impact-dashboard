@@ -8,7 +8,15 @@ import {
 } from "@/components/ui/chart";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { CartesianGrid, Line, LineChart, XAxis, Pie, PieChart } from "recharts";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  XAxis,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+} from "recharts";
 
 export const Route = createFileRoute("/ecological-credits")({
   component: RouteComponent,
@@ -78,11 +86,13 @@ function RouteComponent() {
   const [activeOption, setActiveOption] = useState("option1");
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4">
+    <div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden">
       <div>
-        <div className={`w-full flex justify-between mb-2`}>
-          <h2 className="text-[27px] font-[500]">Ecological Credits</h2>
-          <div className="bg-white p-1 rounded-xl shadow-sm border border-gray-200">
+        <div className={`flex md:justify-between mb-2`}>
+          <h2 className="md:text-[27px] text-[17px] font-[500]">
+            Ecological Credits
+          </h2>
+          <div className="bg-white md:block hidden p-1 rounded-xl shadow-sm border border-gray-200">
             <div className="flex relative">
               {options.map((option) => (
                 <button
@@ -104,61 +114,77 @@ function RouteComponent() {
             </div>
           </div>
         </div>
-        <div className="grid auto-rows-min gap-4 md:grid-cols-[1.3fr_1fr]">
-          <div className="h-82 rounded-xl bg-muted/50 p-2">
+        {/* Fixed grid layout - single column on mobile, proper sizing on desktop */}
+        <div className="grid auto-rows-min gap-4 grid-cols-1 md:grid-cols-[1.3fr_1fr]">
+          {/* Line Chart Container - Fixed width constraints */}
+          <div className="h-82 rounded-xl bg-muted/50 p-2 min-w-0 overflow-hidden">
             <ChartContainer
               config={lineChartConfig}
-              className="w-full h-full relative"
+              className="w-full h-full relative min-w-0"
             >
-              <LineChart
-                accessibilityLayer
-                data={lineChartData}
-                margin={{
-                  left: 12,
-                  right: 12,
-                }}
-              >
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="month"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                  tickFormatter={(value) => value.slice(0, 3)}
-                />
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent />}
-                />
-                <Line
-                  dataKey="desktop"
-                  type="monotone"
-                  stroke="var(--color-desktop)"
-                  strokeWidth={2}
-                  dot={false}
-                />
-                <Line
-                  dataKey="mobile"
-                  type="monotone"
-                  stroke="var(--color-mobile)"
-                  strokeWidth={2}
-                  dot={false}
-                />
-              </LineChart>
+              <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+                <LineChart
+                  accessibilityLayer
+                  data={lineChartData}
+                  margin={{
+                    left: 12,
+                    right: 12,
+                    top: 8,
+                    bottom: 8,
+                  }}
+                >
+                  <CartesianGrid vertical={false} />
+                  <XAxis
+                    dataKey="month"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                    tickFormatter={(value) => value.slice(0, 3)}
+                  />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent />}
+                  />
+                  <Line
+                    dataKey="desktop"
+                    type="monotone"
+                    stroke="var(--color-desktop)"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                  <Line
+                    dataKey="mobile"
+                    type="monotone"
+                    stroke="var(--color-mobile)"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </ChartContainer>
           </div>
-          <div className="h-82 rounded-xl bg-muted/50 p-6 space-y-4">
+
+          {/* Pie Chart Container - Fixed width constraints */}
+          <div className="h-82 rounded-xl bg-muted/50 p-4 md:p-6 space-y-4 min-w-0 overflow-hidden">
             <ChartContainer
               config={chartConfig}
-              className="mx-auto aspect-square max-h-[300px]"
+              className="mx-auto aspect-square max-h-[280px] w-full min-w-0"
             >
-              <PieChart>
-                <Pie data={chartData} dataKey="visitors" />
-                <ChartLegend
-                  content={<ChartLegendContent nameKey="browser" />}
-                  className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
-                />
-              </PieChart>
+              <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+                <PieChart>
+                  <Pie
+                    data={chartData}
+                    dataKey="visitors"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius="80%"
+                  />
+                  <ChartLegend
+                    content={<ChartLegendContent nameKey="browser" />}
+                    className="-translate-y-2 flex-wrap gap-2 text-xs"
+                  />
+                </PieChart>
+              </ResponsiveContainer>
             </ChartContainer>
           </div>
         </div>
@@ -166,32 +192,42 @@ function RouteComponent() {
       <div className={``}>
         <div className="grid auto-rows-min gap-4 md:grid-cols-4">
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-            <p className={`text-[40px] font-bold text-center`}>
+            <p className={`text-[30px] md:text-[40px] font-bold text-center`}>
               {Number(3440239).toLocaleString()}
             </p>
-            <p className={`text-[16px] text-neutral-700 text-center`}>Issued</p>
+            <p
+              className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
+            >
+              Issued
+            </p>
           </div>
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-            <p className={`text-[40px] font-bold text-center`}>
+            <p className={`text-[30px] md:text-[40px] font-bold text-center`}>
               {Number(440239).toLocaleString()}
             </p>
-            <p className={`text-[16px] text-neutral-700 text-center`}>
+            <p
+              className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
+            >
               Retired
             </p>
           </div>
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-            <p className={`text-[40px] font-bold text-center`}>
+            <p className={`text-[30px] md:text-[40px] font-bold text-center`}>
               ${Number(3440239).toLocaleString()}
             </p>
-            <p className={`text-[16px] text-neutral-700 text-center`}>
+            <p
+              className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
+            >
               Sales Volume
             </p>
           </div>
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-            <p className={`text-[40px] font-bold text-center`}>
+            <p className={`text-[30px] md:text-[40px] font-bold text-center`}>
               {Number(12).toLocaleString()}
             </p>
-            <p className={`text-[16px] text-neutral-700 text-center`}>
+            <p
+              className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
+            >
               Projects reporting
             </p>
           </div>
