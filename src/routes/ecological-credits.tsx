@@ -7,6 +7,7 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, Pie, PieChart } from "recharts";
 
 export const Route = createFileRoute("/ecological-credits")({
@@ -74,10 +75,35 @@ const options = [
 ];
 
 function RouteComponent() {
+  const [activeOption, setActiveOption] = useState("option1");
+
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
       <div>
-        <h2 className="text-[27px] font-[500] mb-0.5">Ecological Credits</h2>
+        <div className={`w-full flex justify-between mb-2`}>
+          <h2 className="text-[27px] font-[500]">Ecological Credits</h2>
+          <div className="bg-white p-1 rounded-xl shadow-sm border border-gray-200">
+            <div className="flex relative">
+              {options.map((option) => (
+                <button
+                  key={option.id}
+                  onClick={() => setActiveOption(option.id)}
+                  className={`
+                    relative px-6 py-2 rounded-lg font-medium text-sm transition-all duration-200 ease-in-out
+                    flex items-center gap-2 min-w-[120px] justify-center
+                    ${
+                      activeOption === option.id
+                        ? "bg-yellow-500 text-white shadow-md transform scale-105"
+                        : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                    }
+                  `}
+                >
+                  <span>{option.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
         <div className="grid auto-rows-min gap-4 md:grid-cols-[1.3fr_1fr]">
           <div className="h-82 rounded-xl bg-muted/50 p-2">
             <ChartContainer
