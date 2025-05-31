@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as OverviewImport } from './routes/overview'
+import { Route as EcologicalCreditsImport } from './routes/ecological-credits'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
@@ -19,6 +20,12 @@ import { Route as IndexImport } from './routes/index'
 const OverviewRoute = OverviewImport.update({
   id: '/overview',
   path: '/overview',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EcologicalCreditsRoute = EcologicalCreditsImport.update({
+  id: '/ecological-credits',
+  path: '/ecological-credits',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -39,6 +46,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/ecological-credits': {
+      id: '/ecological-credits'
+      path: '/ecological-credits'
+      fullPath: '/ecological-credits'
+      preLoaderRoute: typeof EcologicalCreditsImport
+      parentRoute: typeof rootRoute
+    }
     '/overview': {
       id: '/overview'
       path: '/overview'
@@ -53,36 +67,41 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ecological-credits': typeof EcologicalCreditsRoute
   '/overview': typeof OverviewRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ecological-credits': typeof EcologicalCreditsRoute
   '/overview': typeof OverviewRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/ecological-credits': typeof EcologicalCreditsRoute
   '/overview': typeof OverviewRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/overview'
+  fullPaths: '/' | '/ecological-credits' | '/overview'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/overview'
-  id: '__root__' | '/' | '/overview'
+  to: '/' | '/ecological-credits' | '/overview'
+  id: '__root__' | '/' | '/ecological-credits' | '/overview'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  EcologicalCreditsRoute: typeof EcologicalCreditsRoute
   OverviewRoute: typeof OverviewRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  EcologicalCreditsRoute: EcologicalCreditsRoute,
   OverviewRoute: OverviewRoute,
 }
 
@@ -97,11 +116,15 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/ecological-credits",
         "/overview"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/ecological-credits": {
+      "filePath": "ecological-credits.tsx"
     },
     "/overview": {
       "filePath": "overview.tsx"

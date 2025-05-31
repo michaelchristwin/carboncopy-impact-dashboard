@@ -38,7 +38,7 @@ const data: SidebarData = {
       isCollapsible: true,
       items: [
         { title: "Overview", url: "/overview" },
-        { title: "Ecological Credits", url: "#" },
+        { title: "Ecological Credits", url: "/ecological-credits" },
         { title: "Waste", url: "#" },
         { title: "Investment", url: "#" },
         { title: "Grants", url: "#" },

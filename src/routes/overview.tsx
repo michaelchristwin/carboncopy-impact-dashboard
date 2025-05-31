@@ -11,33 +11,41 @@ function RouteComponent() {
         <div className="h-85 rounded-xl bg-muted/50" />
         <div className="h-85 rounded-xl bg-muted/50 p-6 space-y-4">
           <div>
-            <h2 className={`text-[20px]`}>Total Funding</h2>
+            <h2 className={`text-[20px]`}>Total Funding to impact projects</h2>
             <p className={`text-[50px] font-bold`}>
-              {Number(21000000).toLocaleString()}
+              ${Number(21000000).toLocaleString()}
             </p>
           </div>
           <div className={`flex w-full justify-between`}>
             <div>
               <p>7 Days</p>
-              <p>+7.36% (23,200)</p>
+              <p>+7.36% (${Number(23200).toLocaleString()})</p>
             </div>
             <div>
               <p>30 Days</p>
-              <p>+7.36% (23,200)</p>
+              <p>+7.36% (${Number(23200).toLocaleString()})</p>
             </div>
           </div>
           <div className="w-full flex justify-between">
             <div>
               <p className={`text-[18px]`}>Investments</p>
               <p className={`font-semibold text-[20px]`}>
-                {Number(16000000).toLocaleString()}
+                ${Number(16000000).toLocaleString()}
               </p>
+              <div className={`mt-1`}>
+                <p>7D: +7.36% (${Number(23200).toLocaleString()})</p>
+                <p>30D: +7.36% (${Number(23200).toLocaleString()})</p>
+              </div>
             </div>
             <div>
               <p className={`text-[18px]`}>Grants</p>
               <p className={`font-semibold text-[20px]`}>
-                {Number(5000000).toLocaleString()}
+                ${Number(5000000).toLocaleString()}
               </p>
+              <div className={`mt-1`}>
+                <p>7D: +7.36% (${Number(23200).toLocaleString()})</p>
+                <p>30D: +7.36% (${Number(23200).toLocaleString()})</p>
+              </div>
             </div>
           </div>
         </div>
