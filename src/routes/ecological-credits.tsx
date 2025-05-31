@@ -86,7 +86,28 @@ function RouteComponent() {
   const [activeOption, setActiveOption] = useState("option1");
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden">
+    <div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden relative">
+      <div className="bg-white fixed top-[93dvh] w-[99%] z-10 right-0 p-1 rounded-xl shadow-sm border border-gray-200">
+        <div className="flex relative">
+          {options.map((option) => (
+            <button
+              key={option.id}
+              onClick={() => setActiveOption(option.id)}
+              className={`
+                    relative px-6 py-2 rounded-lg font-medium text-sm transition-all duration-200 ease-in-out
+                    flex items-center gap-2 min-w-[120px] justify-center
+                    ${
+                      activeOption === option.id
+                        ? "bg-yellow-500 text-white shadow-md transform scale-105"
+                        : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                    }
+                  `}
+            >
+              <span>{option.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
       <div>
         <div className={`flex md:justify-between mb-2`}>
           <h2 className="md:text-[27px] text-[17px] font-[500]">
