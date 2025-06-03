@@ -9,10 +9,12 @@ function RouteComponent() {
     <div className="flex flex-1 flex-col gap-4 p-4">
       <div className="grid auto-rows-min gap-4 md:grid-cols-[1.3fr_1fr]">
         <div className="h-85 rounded-xl bg-muted/50" />
-        <div className="h-85 rounded-xl bg-muted/50 p-6 space-y-4">
+        <div className="h-85 rounded-xl bg-muted/50 md:p-6 p-3 md:space-y-4 space-y-3">
           <div>
-            <h2 className={`text-[20px]`}>Total Funding to impact projects</h2>
-            <p className={`text-[50px] font-bold`}>
+            <h2 className={`md:text-[20px] text-[17px]`}>
+              Total Funding to impact projects
+            </h2>
+            <p className={`md:text-[50px] text-[40px] font-bold`}>
               ${Number(21000000).toLocaleString()}
             </p>
           </div>
@@ -32,9 +34,13 @@ function RouteComponent() {
               <p className={`font-semibold text-[20px]`}>
                 ${Number(16000000).toLocaleString()}
               </p>
-              <div className={`mt-1`}>
-                <p>7D: +7.36% (${Number(23200).toLocaleString()})</p>
-                <p>30D: +7.36% (${Number(23200).toLocaleString()})</p>
+              <div className={`mt-1 space-y-1`}>
+                <p className={`md:text-[1rem] text-[0.8rem] text-green-500`}>
+                  7D: +7.36% (${Number(23200).toLocaleString()})
+                </p>
+                <p className={`md:text-[1rem] text-[0.8rem] text-green-500`}>
+                  30D: +7.36% (${Number(23200).toLocaleString()})
+                </p>
               </div>
             </div>
             <div>
@@ -42,9 +48,13 @@ function RouteComponent() {
               <p className={`font-semibold text-[20px]`}>
                 ${Number(5000000).toLocaleString()}
               </p>
-              <div className={`mt-1`}>
-                <p>7D: +7.36% (${Number(23200).toLocaleString()})</p>
-                <p>30D: +7.36% (${Number(23200).toLocaleString()})</p>
+              <div className={`mt-1 block space-y-1`}>
+                <p className={`md:text-[1rem] text-[0.8rem] text-green-500`}>
+                  7D: +7.36% (${Number(23200).toLocaleString()})
+                </p>
+                <p className={`md:text-[1rem] text-[0.8rem] text-green-500`}>
+                  30D: +7.36% (${Number(23200).toLocaleString()})
+                </p>
               </div>
             </div>
           </div>

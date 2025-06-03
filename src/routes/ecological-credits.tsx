@@ -87,7 +87,7 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden relative">
-      <div className="bg-white fixed top-[93dvh] w-[99%] z-10 right-0 p-1 rounded-xl shadow-sm border border-gray-200">
+      <div className="bg-white fixed top-[93dvh] md:hidden block w-[99%] z-10 right-0 p-1 rounded-xl shadow-sm border border-gray-200">
         <div className="flex relative">
           {options.map((option) => (
             <button
