@@ -1,3 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
 import {
   ChartContainer,
   ChartLegend,
@@ -6,8 +7,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+
 import {
   CartesianGrid,
   Line,
@@ -18,36 +18,32 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-export const Route = createFileRoute("/ecological-credits")({
-  component: RouteComponent,
-});
-
 const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 90, fill: "var(--color-other)" },
+  { chain: "ethereum", funding: 275, fill: "var(--color-ethereum)" },
+  { chain: "solana", funding: 200, fill: "var(--color-solana)" },
+  { chain: "base", funding: 187, fill: "var(--color-base)" },
+  { chain: "optimism", funding: 173, fill: "var(--color-optimism)" },
+  { chain: "other", funding: 90, fill: "var(--color-other)" },
 ];
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
+  funding: {
+    label: "Funding",
   },
-  chrome: {
-    label: "Chrome",
+  ethereum: {
+    label: "Ethereum",
     color: "var(--chart-1)",
   },
-  safari: {
-    label: "Safari",
+  solana: {
+    label: "Solana",
     color: "var(--chart-2)",
   },
-  firefox: {
-    label: "Firefox",
+  base: {
+    label: "Base",
     color: "var(--chart-3)",
   },
-  edge: {
-    label: "Edge",
+  optimism: {
+    label: "Optimism",
     color: "var(--chart-4)",
   },
   other: {
@@ -76,65 +72,15 @@ const lineChartConfig = {
   },
 } satisfies ChartConfig;
 
-const options = [
-  { id: "option1", label: "All" },
-  { id: "option2", label: "On-Chain" },
-  { id: "option3", label: "Off-Chain" },
-];
+export const Route = createFileRoute("/chains")({
+  component: RouteComponent,
+});
 
 function RouteComponent() {
-  const [activeOption, setActiveOption] = useState("option1");
-
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden relative">
-      <div className="bg-white fixed top-[93dvh] md:hidden block w-[99%] z-10 right-0 p-1 rounded-xl shadow-sm border border-gray-200">
-        <div className="flex relative">
-          {options.map((option) => (
-            <button
-              key={option.id}
-              onClick={() => setActiveOption(option.id)}
-              className={`
-                    relative px-6 py-2 rounded-lg font-medium text-sm transition-all duration-200 ease-in-out
-                    flex items-center gap-2 min-w-[120px] justify-center
-                    ${
-                      activeOption === option.id
-                        ? "bg-yellow-500 text-white shadow-md transform scale-105"
-                        : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
-                    }
-                  `}
-            >
-              <span>{option.label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
       <div>
-        <div className={`flex md:justify-between mb-2`}>
-          <h2 className="md:text-[27px] text-[17px] font-[500]">
-            Ecological Credits
-          </h2>
-          <div className="bg-white md:block hidden p-1 rounded-xl shadow-sm border border-gray-200">
-            <div className="flex relative">
-              {options.map((option) => (
-                <button
-                  key={option.id}
-                  onClick={() => setActiveOption(option.id)}
-                  className={`
-                    relative px-6 py-2 rounded-lg font-medium text-sm transition-all duration-200 ease-in-out
-                    flex items-center gap-2 min-w-[120px] justify-center
-                    ${
-                      activeOption === option.id
-                        ? "bg-yellow-500 text-white shadow-md transform scale-105"
-                        : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
-                    }
-                  `}
-                >
-                  <span>{option.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
+        <h2 className="md:text-[27px] text-[17px] font-[500]">Chains</h2>
         {/* Fixed grid layout - single column on mobile, proper sizing on desktop */}
         <div className="grid auto-rows-min gap-4 grid-cols-1 md:grid-cols-[1.3fr_1fr]">
           {/* Line Chart Container - Fixed width constraints */}
@@ -195,13 +141,13 @@ function RouteComponent() {
                 <PieChart>
                   <Pie
                     data={chartData}
-                    dataKey="visitors"
+                    dataKey="funding"
                     cx="50%"
                     cy="50%"
                     outerRadius="80%"
                   />
                   <ChartLegend
-                    content={<ChartLegendContent nameKey="browser" />}
+                    content={<ChartLegendContent nameKey="chain" />}
                     className="-translate-y-2 flex-wrap gap-2 text-xs"
                   />
                 </PieChart>
@@ -214,48 +160,48 @@ function RouteComponent() {
         <div className="grid auto-rows-min gap-4 md:grid-cols-4">
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
             <p className={`text-[30px] md:text-[40px] font-bold text-center`}>
-              {Number(3440239).toLocaleString()}
+              85%
             </p>
             <p
               className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
             >
-              Issued
+              EVM TFI Dominance
             </p>
           </div>
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
             <p className={`text-[30px] md:text-[40px] font-bold text-center`}>
-              {Number(440239).toLocaleString()}
+              90%
             </p>
             <p
               className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
             >
-              Retired
+              EVM Investment Dominance
             </p>
           </div>
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
             <p className={`text-[30px] md:text-[40px] font-bold text-center`}>
-              ${Number(3440239).toLocaleString()}
+              80%
             </p>
             <p
               className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
             >
-              Sales Volume
+              EVM Grant Dominance
             </p>
           </div>
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
             <p className={`text-[30px] md:text-[40px] font-bold text-center`}>
-              {Number(12).toLocaleString()}
+              12
             </p>
             <p
               className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
             >
-              Projects reporting
+              Chains Reporting
             </p>
           </div>
         </div>
       </div>
       <div className="h-fit w-full min-h-[100vh] flex flex-col flex-1 md:min-h-min space-y-2">
-        <h2 className="text-[22px] font-bold">Projects</h2>
+        <h2 className="text-[22px] font-bold">Chain Listing</h2>
         <div className="flex-1 rounded-xl bg-muted/50 p-6" />
       </div>
     </div>

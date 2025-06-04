@@ -5,5 +5,5 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  return <Navigate to={"/overview"} />;
+  return <Navigate to={"/refi/overview"} />;
 }
