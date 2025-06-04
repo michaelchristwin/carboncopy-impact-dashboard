@@ -19,31 +19,31 @@ import {
 } from "recharts";
 
 const chartData = [
-  { chain: "ethereum", funding: 275, fill: "var(--color-ethereum)" },
-  { chain: "solana", funding: 200, fill: "var(--color-solana)" },
-  { chain: "base", funding: 187, fill: "var(--color-base)" },
-  { chain: "optimism", funding: 173, fill: "var(--color-optimism)" },
-  { chain: "other", funding: 90, fill: "var(--color-other)" },
+  { chain: "evm", funding: 275, fill: "rgb(52, 152, 219)" },
+  { chain: "solana", funding: 200, fill: "rgb(123, 237, 159)" },
+  { chain: "polkadot", funding: 187, fill: "rgb(231, 76, 60)" },
+  { chain: "near", funding: 173, fill: "rgb(155, 89, 182)" },
+  { chain: "other", funding: 90, fill: "rgb(241, 196, 15)" },
 ];
 
 const chartConfig = {
   funding: {
     label: "Funding",
   },
-  ethereum: {
-    label: "Ethereum",
+  evm: {
+    label: "EVM",
     color: "var(--chart-1)",
   },
   solana: {
     label: "Solana",
     color: "var(--chart-2)",
   },
-  base: {
-    label: "Base",
+  polkadot: {
+    label: "Polkadot",
     color: "var(--chart-3)",
   },
-  optimism: {
-    label: "Optimism",
+  near: {
+    label: "Near",
     color: "var(--chart-4)",
   },
   other: {

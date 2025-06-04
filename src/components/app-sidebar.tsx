@@ -49,7 +49,7 @@ const data: SidebarData = {
     },
     {
       title: "Projects",
-      url: "#",
+      url: "/projects",
       isCollapsible: false,
     },
     {

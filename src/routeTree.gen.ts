@@ -11,12 +11,19 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as ProjectsImport } from './routes/projects'
 import { Route as ChainsImport } from './routes/chains'
 import { Route as IndexImport } from './routes/index'
 import { Route as RefiOverviewImport } from './routes/refi/overview'
 import { Route as RefiEcologicalCreditsImport } from './routes/refi/ecological-credits'
 
 // Create/Update Routes
+
+const ProjectsRoute = ProjectsImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const ChainsRoute = ChainsImport.update({
   id: '/chains',
@@ -60,6 +67,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChainsImport
       parentRoute: typeof rootRoute
     }
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsImport
+      parentRoute: typeof rootRoute
+    }
     '/refi/ecological-credits': {
       id: '/refi/ecological-credits'
       path: '/refi/ecological-credits'
@@ -82,6 +96,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/chains': typeof ChainsRoute
+  '/projects': typeof ProjectsRoute
   '/refi/ecological-credits': typeof RefiEcologicalCreditsRoute
   '/refi/overview': typeof RefiOverviewRoute
 }
@@ -89,6 +104,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/chains': typeof ChainsRoute
+  '/projects': typeof ProjectsRoute
   '/refi/ecological-credits': typeof RefiEcologicalCreditsRoute
   '/refi/overview': typeof RefiOverviewRoute
 }
@@ -97,19 +113,31 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/chains': typeof ChainsRoute
+  '/projects': typeof ProjectsRoute
   '/refi/ecological-credits': typeof RefiEcologicalCreditsRoute
   '/refi/overview': typeof RefiOverviewRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/chains' | '/refi/ecological-credits' | '/refi/overview'
+  fullPaths:
+    | '/'
+    | '/chains'
+    | '/projects'
+    | '/refi/ecological-credits'
+    | '/refi/overview'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/chains' | '/refi/ecological-credits' | '/refi/overview'
+  to:
+    | '/'
+    | '/chains'
+    | '/projects'
+    | '/refi/ecological-credits'
+    | '/refi/overview'
   id:
     | '__root__'
     | '/'
     | '/chains'
+    | '/projects'
     | '/refi/ecological-credits'
     | '/refi/overview'
   fileRoutesById: FileRoutesById
@@ -118,6 +146,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ChainsRoute: typeof ChainsRoute
+  ProjectsRoute: typeof ProjectsRoute
   RefiEcologicalCreditsRoute: typeof RefiEcologicalCreditsRoute
   RefiOverviewRoute: typeof RefiOverviewRoute
 }
@@ -125,6 +154,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ChainsRoute: ChainsRoute,
+  ProjectsRoute: ProjectsRoute,
   RefiEcologicalCreditsRoute: RefiEcologicalCreditsRoute,
   RefiOverviewRoute: RefiOverviewRoute,
 }
@@ -141,6 +171,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/chains",
+        "/projects",
         "/refi/ecological-credits",
         "/refi/overview"
       ]
@@ -150,6 +181,9 @@ export const routeTree = rootRoute
     },
     "/chains": {
       "filePath": "chains.tsx"
+    },
+    "/projects": {
+      "filePath": "projects.tsx"
     },
     "/refi/ecological-credits": {
       "filePath": "refi/ecological-credits.tsx"
