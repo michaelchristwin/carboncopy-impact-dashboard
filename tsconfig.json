@@ -1,13 +1,16 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  }
+	"compilerOptions": {
+		"jsx": "react-jsx",
+		"moduleResolution": "Bundler",
+		"module": "ESNext",
+		"target": "ES2022",
+		"skipLibCheck": true,
+		"strictNullChecks": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"baseUrl": ".",
+		"paths": {
+			"~/*": ["./src/*"]
+		}
+	}
 }

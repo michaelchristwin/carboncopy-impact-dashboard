@@ -8,90 +8,44 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as ChainsRouteImport } from './routes/chains'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as RefiRenewableEnergyRouteImport } from './routes/refi/renewable-energy'
+import { Route as RefiOverviewRouteImport } from './routes/refi/overview'
+import { Route as RefiEcologicalCreditsRouteImport } from './routes/refi/ecological-credits'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as ProjectsImport } from './routes/projects'
-import { Route as ChainsImport } from './routes/chains'
-import { Route as IndexImport } from './routes/index'
-import { Route as RefiOverviewImport } from './routes/refi/overview'
-import { Route as RefiEcologicalCreditsImport } from './routes/refi/ecological-credits'
-
-// Create/Update Routes
-
-const ProjectsRoute = ProjectsImport.update({
+const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const ChainsRoute = ChainsImport.update({
+const ChainsRoute = ChainsRouteImport.update({
   id: '/chains',
   path: '/chains',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const RefiOverviewRoute = RefiOverviewImport.update({
+const RefiRenewableEnergyRoute = RefiRenewableEnergyRouteImport.update({
+  id: '/refi/renewable-energy',
+  path: '/refi/renewable-energy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RefiOverviewRoute = RefiOverviewRouteImport.update({
   id: '/refi/overview',
   path: '/refi/overview',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const RefiEcologicalCreditsRoute = RefiEcologicalCreditsImport.update({
+const RefiEcologicalCreditsRoute = RefiEcologicalCreditsRouteImport.update({
   id: '/refi/ecological-credits',
   path: '/refi/ecological-credits',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-// Populate the FileRoutesByPath interface
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/chains': {
-      id: '/chains'
-      path: '/chains'
-      fullPath: '/chains'
-      preLoaderRoute: typeof ChainsImport
-      parentRoute: typeof rootRoute
-    }
-    '/projects': {
-      id: '/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof ProjectsImport
-      parentRoute: typeof rootRoute
-    }
-    '/refi/ecological-credits': {
-      id: '/refi/ecological-credits'
-      path: '/refi/ecological-credits'
-      fullPath: '/refi/ecological-credits'
-      preLoaderRoute: typeof RefiEcologicalCreditsImport
-      parentRoute: typeof rootRoute
-    }
-    '/refi/overview': {
-      id: '/refi/overview'
-      path: '/refi/overview'
-      fullPath: '/refi/overview'
-      preLoaderRoute: typeof RefiOverviewImport
-      parentRoute: typeof rootRoute
-    }
-  }
-}
-
-// Create and export the route tree
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -99,25 +53,25 @@ export interface FileRoutesByFullPath {
   '/projects': typeof ProjectsRoute
   '/refi/ecological-credits': typeof RefiEcologicalCreditsRoute
   '/refi/overview': typeof RefiOverviewRoute
+  '/refi/renewable-energy': typeof RefiRenewableEnergyRoute
 }
-
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/chains': typeof ChainsRoute
   '/projects': typeof ProjectsRoute
   '/refi/ecological-credits': typeof RefiEcologicalCreditsRoute
   '/refi/overview': typeof RefiOverviewRoute
+  '/refi/renewable-energy': typeof RefiRenewableEnergyRoute
 }
-
 export interface FileRoutesById {
-  __root__: typeof rootRoute
+  __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/chains': typeof ChainsRoute
   '/projects': typeof ProjectsRoute
   '/refi/ecological-credits': typeof RefiEcologicalCreditsRoute
   '/refi/overview': typeof RefiOverviewRoute
+  '/refi/renewable-energy': typeof RefiRenewableEnergyRoute
 }
-
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
@@ -126,6 +80,7 @@ export interface FileRouteTypes {
     | '/projects'
     | '/refi/ecological-credits'
     | '/refi/overview'
+    | '/refi/renewable-energy'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -133,6 +88,7 @@ export interface FileRouteTypes {
     | '/projects'
     | '/refi/ecological-credits'
     | '/refi/overview'
+    | '/refi/renewable-energy'
   id:
     | '__root__'
     | '/'
@@ -140,15 +96,63 @@ export interface FileRouteTypes {
     | '/projects'
     | '/refi/ecological-credits'
     | '/refi/overview'
+    | '/refi/renewable-energy'
   fileRoutesById: FileRoutesById
 }
-
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ChainsRoute: typeof ChainsRoute
   ProjectsRoute: typeof ProjectsRoute
   RefiEcologicalCreditsRoute: typeof RefiEcologicalCreditsRoute
   RefiOverviewRoute: typeof RefiOverviewRoute
+  RefiRenewableEnergyRoute: typeof RefiRenewableEnergyRoute
+}
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chains': {
+      id: '/chains'
+      path: '/chains'
+      fullPath: '/chains'
+      preLoaderRoute: typeof ChainsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/refi/renewable-energy': {
+      id: '/refi/renewable-energy'
+      path: '/refi/renewable-energy'
+      fullPath: '/refi/renewable-energy'
+      preLoaderRoute: typeof RefiRenewableEnergyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/refi/overview': {
+      id: '/refi/overview'
+      path: '/refi/overview'
+      fullPath: '/refi/overview'
+      preLoaderRoute: typeof RefiOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/refi/ecological-credits': {
+      id: '/refi/ecological-credits'
+      path: '/refi/ecological-credits'
+      fullPath: '/refi/ecological-credits'
+      preLoaderRoute: typeof RefiEcologicalCreditsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+  }
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -157,40 +161,8 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectsRoute: ProjectsRoute,
   RefiEcologicalCreditsRoute: RefiEcologicalCreditsRoute,
   RefiOverviewRoute: RefiOverviewRoute,
+  RefiRenewableEnergyRoute: RefiRenewableEnergyRoute,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/chains",
-        "/projects",
-        "/refi/ecological-credits",
-        "/refi/overview"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/chains": {
-      "filePath": "chains.tsx"
-    },
-    "/projects": {
-      "filePath": "projects.tsx"
-    },
-    "/refi/ecological-credits": {
-      "filePath": "refi/ecological-credits.tsx"
-    },
-    "/refi/overview": {
-      "filePath": "refi/overview.tsx"
-    }
-  }
-}
-ROUTE_MANIFEST_END */

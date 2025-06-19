@@ -1,9 +1,11 @@
+// src/routes/index.tsx
+
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
-  component: Index,
+	component: Home,
 });
 
-function Index() {
-  return <Navigate to={"/refi/overview"} />;
+function Home() {
+	return <Navigate to={"/refi/overview"} />;
 }

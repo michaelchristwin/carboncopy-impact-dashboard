@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import {
 	CartesianGrid,
 	Line,
@@ -9,13 +8,14 @@ import {
 	XAxis,
 } from "recharts";
 import {
-	type ChartConfig,
 	ChartContainer,
 	ChartLegend,
 	ChartLegendContent,
 	ChartTooltip,
 	ChartTooltipContent,
+	type ChartConfig,
 } from "~/components/ui/chart";
+import { createFileRoute } from "@tanstack/react-router";
 
 const chartData = [
 	{ chain: "evm", funding: 275, fill: "rgb(52, 152, 219)" },
@@ -71,7 +71,7 @@ const lineChartConfig = {
 	},
 } satisfies ChartConfig;
 
-export const Route = createFileRoute("/chains")({
+export const Route = createFileRoute("/refi/renewable-energy")({
 	component: RouteComponent,
 });
 
@@ -79,7 +79,9 @@ function RouteComponent() {
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden relative">
 			<div>
-				<h2 className="md:text-[27px] text-[17px] font-[500]">Chains</h2>
+				<h2 className="md:text-[27px] text-[17px] font-[500]">
+					Renewable Energy
+				</h2>
 				{/* Fixed grid layout - single column on mobile, proper sizing on desktop */}
 				<div className="grid auto-rows-min gap-4 grid-cols-1 md:grid-cols-[1.3fr_1fr]">
 					{/* Line Chart Container - Fixed width constraints */}
