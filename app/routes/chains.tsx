@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import {
 	CartesianGrid,
 	Line,
@@ -71,11 +70,11 @@ const lineChartConfig = {
 	},
 } satisfies ChartConfig;
 
-export const Route = createFileRoute("/chains")({
-	component: RouteComponent,
-});
+export function meta() {
+	return [{ title: "Chains | Carboncopy Impact Dashboard" }];
+}
 
-function RouteComponent() {
+export default function Chains() {
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden relative">
 			<div>

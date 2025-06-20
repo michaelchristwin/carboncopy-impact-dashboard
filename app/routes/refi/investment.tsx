@@ -8,14 +8,13 @@ import {
 	XAxis,
 } from "recharts";
 import {
+	type ChartConfig,
 	ChartContainer,
 	ChartLegend,
 	ChartLegendContent,
 	ChartTooltip,
 	ChartTooltipContent,
-	type ChartConfig,
 } from "~/components/ui/chart";
-import { createFileRoute } from "@tanstack/react-router";
 
 const chartData = [
 	{ chain: "evm", funding: 275, fill: "rgb(52, 152, 219)" },
@@ -71,17 +70,14 @@ const lineChartConfig = {
 	},
 } satisfies ChartConfig;
 
-export const Route = createFileRoute("/refi/renewable-energy")({
-	component: RouteComponent,
-});
-
-function RouteComponent() {
+export function meta() {
+	return [{ title: "Investment | Carboncopy Impact Dashboard" }];
+}
+export default function Investment() {
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden relative">
 			<div>
-				<h2 className="md:text-[27px] text-[17px] font-[500]">
-					Renewable Energy
-				</h2>
+				<h2 className="md:text-[27px] text-[17px] font-[500]">Investment</h2>
 				{/* Fixed grid layout - single column on mobile, proper sizing on desktop */}
 				<div className="grid auto-rows-min gap-4 grid-cols-1 md:grid-cols-[1.3fr_1fr]">
 					{/* Line Chart Container - Fixed width constraints */}
@@ -160,33 +156,23 @@ function RouteComponent() {
 			<div className={``}>
 				<div className="grid auto-rows-min gap-4 md:grid-cols-4">
 					<div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-						<p className={`text-[30px] md:text-[40px] font-bold text-center`}>
-							85%
+						<p className={`text-[20px] md:text-[30px] font-bold text-center`}>
+							${Number(3440239).toLocaleString()}
 						</p>
 						<p
 							className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
 						>
-							EVM TFI Dominance
+							Invested in Climate Projects
 						</p>
 					</div>
 					<div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-						<p className={`text-[30px] md:text-[40px] font-bold text-center`}>
-							90%
+						<p className={`text-[20px] md:text-[30px] font-bold text-center`}>
+							${Number(40239).toLocaleString()}
 						</p>
 						<p
 							className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
 						>
-							EVM Investment Dominance
-						</p>
-					</div>
-					<div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-						<p className={`text-[30px] md:text-[40px] font-bold text-center`}>
-							80%
-						</p>
-						<p
-							className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
-						>
-							EVM Grant Dominance
+							Yield Generated
 						</p>
 					</div>
 					<div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
@@ -196,13 +182,13 @@ function RouteComponent() {
 						<p
 							className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
 						>
-							Chains Reporting
+							Projects Reporting
 						</p>
 					</div>
 				</div>
 			</div>
 			<div className="h-fit w-full min-h-[100vh] flex flex-col flex-1 md:min-h-min space-y-2">
-				<h2 className="text-[22px] font-bold">Chain Listing</h2>
+				<h2 className="text-[22px] font-bold">Projects</h2>
 				<div className="flex-1 rounded-xl bg-muted/50 p-6" />
 			</div>
 		</div>

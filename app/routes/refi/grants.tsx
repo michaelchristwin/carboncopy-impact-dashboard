@@ -1,5 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
 import {
 	CartesianGrid,
 	Line,
@@ -18,36 +16,32 @@ import {
 	ChartTooltipContent,
 } from "~/components/ui/chart";
 
-export const Route = createFileRoute("/refi/ecological-credits")({
-	component: RouteComponent,
-});
-
 const chartData = [
-	{ browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-	{ browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-	{ browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-	{ browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-	{ browser: "other", visitors: 90, fill: "var(--color-other)" },
+	{ chain: "evm", funding: 275, fill: "rgb(52, 152, 219)" },
+	{ chain: "solana", funding: 200, fill: "rgb(123, 237, 159)" },
+	{ chain: "polkadot", funding: 187, fill: "rgb(231, 76, 60)" },
+	{ chain: "near", funding: 173, fill: "rgb(155, 89, 182)" },
+	{ chain: "other", funding: 90, fill: "rgb(241, 196, 15)" },
 ];
 
 const chartConfig = {
-	visitors: {
-		label: "Visitors",
+	funding: {
+		label: "Funding",
 	},
-	chrome: {
-		label: "Chrome",
+	evm: {
+		label: "EVM",
 		color: "var(--chart-1)",
 	},
-	safari: {
-		label: "Safari",
+	solana: {
+		label: "Solana",
 		color: "var(--chart-2)",
 	},
-	firefox: {
-		label: "Firefox",
+	polkadot: {
+		label: "Polkadot",
 		color: "var(--chart-3)",
 	},
-	edge: {
-		label: "Edge",
+	near: {
+		label: "Near",
 		color: "var(--chart-4)",
 	},
 	other: {
@@ -76,67 +70,14 @@ const lineChartConfig = {
 	},
 } satisfies ChartConfig;
 
-const options = [
-	{ id: "option1", label: "All" },
-	{ id: "option2", label: "On-Chain" },
-	{ id: "option3", label: "Off-Chain" },
-];
-
-function RouteComponent() {
-	const [activeOption, setActiveOption] = useState("option1");
-
+export function meta() {
+	return [{ title: "Grants | Carboncopy Impact Dashboard" }];
+}
+export default function Grants() {
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden relative">
-			<div className="bg-white fixed top-[93dvh] md:hidden block w-[99%] z-10 right-0 p-1 rounded-xl shadow-sm border border-gray-200">
-				<div className="flex relative">
-					{options.map((option) => (
-						<button
-							type="button"
-							key={option.id}
-							onClick={() => setActiveOption(option.id)}
-							className={`
-                    relative px-6 py-2 rounded-lg font-medium text-sm transition-all duration-200 ease-in-out
-                    flex items-center gap-2 min-w-[120px] justify-center
-                    ${
-											activeOption === option.id
-												? "bg-yellow-500 text-white shadow-md transform scale-105"
-												: "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
-										}
-                  `}
-						>
-							<span>{option.label}</span>
-						</button>
-					))}
-				</div>
-			</div>
 			<div>
-				<div className={`flex md:justify-between mb-2`}>
-					<h2 className="md:text-[27px] text-[17px] font-[500]">
-						Ecological Credits
-					</h2>
-					<div className="bg-white md:block hidden p-1 rounded-xl shadow-sm border border-gray-200">
-						<div className="flex relative">
-							{options.map((option) => (
-								<button
-									type="button"
-									key={option.id}
-									onClick={() => setActiveOption(option.id)}
-									className={`
-                    relative px-6 py-2 rounded-lg font-medium text-sm transition-all duration-200 ease-in-out
-                    flex items-center gap-2 min-w-[120px] justify-center
-                    ${
-											activeOption === option.id
-												? "bg-yellow-500 text-white shadow-md transform scale-105"
-												: "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
-										}
-                  `}
-								>
-									<span>{option.label}</span>
-								</button>
-							))}
-						</div>
-					</div>
-				</div>
+				<h2 className="md:text-[27px] text-[17px] font-[500]">Grants</h2>
 				{/* Fixed grid layout - single column on mobile, proper sizing on desktop */}
 				<div className="grid auto-rows-min gap-4 grid-cols-1 md:grid-cols-[1.3fr_1fr]">
 					{/* Line Chart Container - Fixed width constraints */}
@@ -197,13 +138,13 @@ function RouteComponent() {
 								<PieChart>
 									<Pie
 										data={chartData}
-										dataKey="visitors"
+										dataKey="funding"
 										cx="50%"
 										cy="50%"
 										outerRadius="80%"
 									/>
 									<ChartLegend
-										content={<ChartLegendContent nameKey="browser" />}
+										content={<ChartLegendContent nameKey="chain" />}
 										className="-translate-y-2 flex-wrap gap-2 text-xs"
 									/>
 								</PieChart>
@@ -215,43 +156,33 @@ function RouteComponent() {
 			<div className={``}>
 				<div className="grid auto-rows-min gap-4 md:grid-cols-4">
 					<div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-						<p className={`text-[30px] md:text-[40px] font-bold text-center`}>
-							{Number(3440239).toLocaleString()}
+						<p className={`text-[20px] md:text-[30px] font-bold text-center`}>
+							${Number(3400000).toLocaleString()}
 						</p>
 						<p
 							className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
 						>
-							Issued
+							Granted to Impact Projects
+						</p>
+					</div>
+					<div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
+						<p className={`text-[20px] md:text-[30px] font-bold text-center`}>
+							{Number(4239).toLocaleString()}
+						</p>
+						<p
+							className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
+						>
+							Grants to Impact Projects
 						</p>
 					</div>
 					<div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
 						<p className={`text-[30px] md:text-[40px] font-bold text-center`}>
-							{Number(440239).toLocaleString()}
+							12
 						</p>
 						<p
 							className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
 						>
-							Retired
-						</p>
-					</div>
-					<div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-						<p className={`text-[30px] md:text-[40px] font-bold text-center`}>
-							${Number(3440239).toLocaleString()}
-						</p>
-						<p
-							className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
-						>
-							Sales Volume
-						</p>
-					</div>
-					<div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-						<p className={`text-[30px] md:text-[40px] font-bold text-center`}>
-							{Number(12).toLocaleString()}
-						</p>
-						<p
-							className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
-						>
-							Projects reporting
+							Projects Reporting
 						</p>
 					</div>
 				</div>
@@ -261,5 +192,5 @@ function RouteComponent() {
 				<div className="flex-1 rounded-xl bg-muted/50 p-6" />
 			</div>
 		</div>
-	)
+	);
 }

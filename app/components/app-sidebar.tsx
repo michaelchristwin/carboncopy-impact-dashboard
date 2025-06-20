@@ -1,10 +1,10 @@
-import { Link } from "@tanstack/react-router";
-import { ChevronRight, Loader } from "lucide-react";
 import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "~/components/ui/collapsible";
+import { ChevronRight, Loader } from "lucide-react";
+import { NavLink } from "react-router";
 import {
 	Sidebar,
 	SidebarContent,
@@ -39,12 +39,12 @@ const data: SidebarData = {
 			items: [
 				{ title: "Overview", url: "/overview" },
 				{ title: "Ecological Credits", url: "/ecological-credits" },
-				{ title: "Waste", url: "#" },
-				{ title: "Investment", url: "#" },
-				{ title: "Grants", url: "#" },
-				{ title: "Lending", url: "#" },
+				{ title: "Waste", url: "/waste" },
+				{ title: "Investment", url: "/investment" },
+				{ title: "Grants", url: "/grants" },
+				{ title: "Lending", url: "/lending" },
 				{ title: "Renewable Energy", url: "/renewable-energy" },
-				{ title: "Venture Funding", url: "#" },
+				{ title: "Venture Funding", url: "/venture-funding" },
 			],
 		},
 		{
@@ -96,21 +96,31 @@ export function AppSidebar() {
 																<SidebarMenuButton
 																	asChild
 																	isActive={subItem.isActive}
-																	className={`data-[status=active]:text-yellow-500 data-[status=active]:font-semibold text-[15px]`}
+																	className={`text-[15px]`}
 																>
-																	<Link to={item.url + subItem.url}>
-																		{({ isTransitioning }) => (
-																			<span>
-																				{subItem.title}{" "}
-																				{isTransitioning && (
+																	<NavLink
+																		to={item.url + subItem.url}
+																		className="flex justify-between items-center"
+																	>
+																		{({ isPending, isActive }) => (
+																			<>
+																				<span
+																					className={`${
+																						isActive &&
+																						"text-yellow-500 font-semibold"
+																					}`}
+																				>
+																					{subItem.title}
+																				</span>
+																				{isPending && (
 																					<Loader
 																						className="animate-spin"
-																						size={15}
+																						size={10}
 																					/>
 																				)}
-																			</span>
+																			</>
 																		)}
-																	</Link>
+																	</NavLink>
 																</SidebarMenuButton>
 															</SidebarMenuItem>
 														))}
@@ -127,13 +137,26 @@ export function AppSidebar() {
 								<SidebarGroup key={item.title} className={`list-none`}>
 									<SidebarMenu>
 										<SidebarMenuItem>
-											<SidebarMenuButton
-												asChild
-												className={`data-[status=active]:text-yellow-500 data-[status=active]:font-semibold`}
-											>
-												<Link to={item.url} className="text-[20px] font-[500]">
-													{item.title}
-												</Link>
+											<SidebarMenuButton asChild className={``}>
+												<NavLink
+													to={item.url}
+													className="text-[20px] font-[500] flex justify-between items-center"
+												>
+													{({ isActive, isPending }) => (
+														<>
+															<span
+																className={`${
+																	isActive && "text-yellow-500 font-semibold"
+																}`}
+															>
+																{item.title}
+															</span>
+															{isPending && (
+																<Loader className="animate-spin" size={10} />
+															)}
+														</>
+													)}
+												</NavLink>
 											</SidebarMenuButton>
 										</SidebarMenuItem>
 									</SidebarMenu>

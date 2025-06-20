@@ -1,18 +1,8 @@
-// vite.config.ts
-import { defineConfig } from "vite";
-import tsConfigPaths from "vite-tsconfig-paths";
-import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "vite";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-	server: {
-		port: 3000,
-	},
-	plugins: [
-		tsConfigPaths({
-			projects: ["./tsconfig.json"],
-		}),
-		tanstackStart(),
-		tailwindcss(),
-	],
+  plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
 });

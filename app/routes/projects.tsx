@@ -1,5 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
-
 interface ProjectData {
 	name: string;
 	impacts: string[];
@@ -39,11 +37,11 @@ const data: ProjectData[] = [
 	},
 ];
 
-export const Route = createFileRoute("/projects")({
-	component: RouteComponent,
-});
+export function meta() {
+	return [{ title: "Projects | Carboncopy Impact Dashboard" }];
+}
 
-function RouteComponent() {
+export default function Projects() {
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden relative">
 			<div>
@@ -68,7 +66,7 @@ function RouteComponent() {
 							<a
 								target="_blank"
 								href={`https://carboncopy.news/project/${item.slug}`}
-								className={`absolute bottom-3  text-blue-600 hover:underline`}
+								className={`absolute bottom-3  text-yellow-500 hover:underline`}
 							>
 								Details
 								<span className={`font-mono tracking-[-0.1em] text-[13px]`}>
