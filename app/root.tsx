@@ -1,4 +1,4 @@
-import { AppSidebar } from "~/components/app-sidebar";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
 	isRouteErrorResponse,
 	Links,
@@ -7,13 +7,22 @@ import {
 	Scripts,
 	ScrollRestoration,
 } from "react-router";
+import { AppSidebar } from "~/components/app-sidebar";
 import "./app.css";
 import {
+	SidebarInset,
 	SidebarProvider,
 	SidebarTrigger,
-	SidebarInset,
 } from "~/components/ui/sidebar";
 import type { Route } from "./+types/root";
+
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			staleTime: 1000 * 10,
+		},
+	},
+});
 
 export const links: Route.LinksFunction = () => [
 	{ rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -48,16 +57,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
 	return (
-		<SidebarProvider>
-			<AppSidebar />
-			<SidebarInset>
-				<header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-					<SidebarTrigger className="-ml-1" />
-				</header>
+		<QueryClientProvider client={queryClient}>
+			<SidebarProvider>
+				<AppSidebar />
+				<SidebarInset>
+					<header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+						<SidebarTrigger className="-ml-1" />
+					</header>
 
-				<Outlet />
-			</SidebarInset>
-		</SidebarProvider>
+					<Outlet />
+				</SidebarInset>
+			</SidebarProvider>
+		</QueryClientProvider>
 	);
 }
 

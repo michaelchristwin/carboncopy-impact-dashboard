@@ -1,3 +1,10 @@
+import {
+	keepPreviousData,
+	type QueryClient,
+	queryOptions,
+} from "@tanstack/react-query";
+import type { Route } from "./+types/projects";
+
 interface ProjectData {
 	name: string;
 	impacts: string[];
@@ -37,11 +44,45 @@ const data: ProjectData[] = [
 	},
 ];
 
+export const projectQuery = (page = 0) => {
+	const fetchProjects = (page = 0) =>
+		fetch(
+			`https://carboncopy-66xo.onrender.com/api/project-metrics/?page=${page}`,
+		).then((res) => res.json());
+	return queryOptions({
+		queryKey: ["projects", page],
+		placeholderData: keepPreviousData,
+		queryFn: () => async () => {
+			const project = await fetchProjects(page);
+			if (!project) {
+				throw new Response("", {
+					status: 404,
+					statusText: "Not Found",
+				});
+			}
+			return project;
+		},
+	});
+};
+
+export const loader$ =
+	(queryClient: QueryClient) =>
+	async ({ request }: Route.LoaderArgs) => {
+		const url = new URL(request.url);
+		const page = parseInt(url.searchParams.get("page") || "1");
+		await queryClient.ensureQueryData(projectQuery(page));
+		return { page: page };
+	};
+
 export function meta() {
 	return [{ title: "Projects | Carboncopy Impact Dashboard" }];
 }
 
 export default function Projects() {
+	// const { page } = useLoaderData() as Awaited<
+	// 	ReturnType<ReturnType<typeof loader$>>
+	// >;
+	// const { data: project } = useSuspenseQuery(projectQuery(page));
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden relative">
 			<div>

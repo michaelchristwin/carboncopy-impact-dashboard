@@ -8,12 +8,12 @@ import {
 	XAxis,
 } from "recharts";
 import {
+	type ChartConfig,
 	ChartContainer,
 	ChartLegend,
 	ChartLegendContent,
 	ChartTooltip,
 	ChartTooltipContent,
-	type ChartConfig,
 } from "~/components/ui/chart";
 
 const chartData = [
