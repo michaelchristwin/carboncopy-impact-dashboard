@@ -1,8 +1,10 @@
 import {
 	keepPreviousData,
-	type QueryClient,
 	queryOptions,
+	useSuspenseQuery,
 } from "@tanstack/react-query";
+import { useLoaderData } from "react-router";
+import { queryClient } from "~/root";
 import type { Route } from "./+types/projects";
 
 interface ProjectData {
@@ -44,16 +46,24 @@ const data: ProjectData[] = [
 	},
 ];
 
-export const projectQuery = (page = 0) => {
-	const fetchProjects = (page = 0) =>
-		fetch(
-			`https://carboncopy-66xo.onrender.com/api/project-metrics/?page=${page}`,
-		).then((res) => res.json());
-	return queryOptions({
+const fetchProjectMetrics = async (page: number) => {
+	const res = await fetch(
+		`https://django-api-usio.onrender.com/api/project-metrics/?page=${page}`,
+		{ credentials: "include" },
+	);
+	if (!res.ok) {
+		throw new Response("Failed to fetch data", { status: 500 });
+	}
+
+	const data = await res.json();
+	return data;
+};
+
+export const projectMetricsQuery = (page: number) =>
+	queryOptions({
 		queryKey: ["projects", page],
-		placeholderData: keepPreviousData,
-		queryFn: () => async () => {
-			const project = await fetchProjects(page);
+		queryFn: async () => {
+			const project = await fetchProjectMetrics(page);
 			if (!project) {
 				throw new Response("", {
 					status: 404,
@@ -62,27 +72,32 @@ export const projectQuery = (page = 0) => {
 			}
 			return project;
 		},
+		placeholderData: keepPreviousData,
 	});
-};
 
-export const loader$ =
-	(queryClient: QueryClient) =>
-	async ({ request }: Route.LoaderArgs) => {
-		const url = new URL(request.url);
-		const page = parseInt(url.searchParams.get("page") || "1");
-		await queryClient.ensureQueryData(projectQuery(page));
-		return { page: page };
-	};
+export async function loader({ request }: Route.LoaderArgs) {
+	const url = new URL(request.url);
+	const page = parseInt(url.searchParams.get("page") || "1", 10);
+	await queryClient.ensureQueryData(projectMetricsQuery(page));
+	return { page };
+}
 
 export function meta() {
 	return [{ title: "Projects | Carboncopy Impact Dashboard" }];
 }
 
 export default function Projects() {
-	// const { page } = useLoaderData() as Awaited<
-	// 	ReturnType<ReturnType<typeof loader$>>
-	// >;
-	// const { data: project } = useSuspenseQuery(projectQuery(page));
+	const { page } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
+	console.log(page);
+	const { data: projects_metrics } = useSuspenseQuery(
+		projectMetricsQuery(page),
+	);
+	console.log(projects_metrics);
+	const { results, next, previous } = projects_metrics;
+	console.log(results);
+	console.log("Next: ", next);
+	console.log("Previous: ", previous);
+
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden relative">
 			<div>

@@ -16,7 +16,7 @@ import {
 } from "~/components/ui/sidebar";
 import type { Route } from "./+types/root";
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
 			staleTime: 1000 * 10,
