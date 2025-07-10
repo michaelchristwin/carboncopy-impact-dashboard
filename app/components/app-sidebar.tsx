@@ -66,7 +66,7 @@ export function AppSidebar() {
 		<Sidebar variant="inset">
 			<SidebarContent className="bg-white">
 				<SidebarGroup>
-					<SidebarGroupLabel>Carboncopy Impact Dashboard</SidebarGroupLabel>
+					<SidebarGroupLabel>Carboncopy Impact Dashboard </SidebarGroupLabel>
 					<SidebarGroupContent>
 						{data.navMain.map((item) => {
 							// Render collapsible items
