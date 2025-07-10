@@ -43,6 +43,7 @@ const data: SidebarData = {
 				{ title: "Investment", url: "/investment" },
 				{ title: "Grants", url: "/grants" },
 				{ title: "Lending", url: "/lending" },
+				{ title: "UBI", url: "/ubi" },
 				{ title: "Renewable Energy", url: "/renewable-energy" },
 				{ title: "Venture Funding", url: "/venture-funding" },
 			],
@@ -65,7 +66,7 @@ export function AppSidebar() {
 		<Sidebar variant="inset">
 			<SidebarContent className="bg-white">
 				<SidebarGroup>
-					<SidebarGroupLabel>Carboncopy</SidebarGroupLabel>
+					<SidebarGroupLabel>Carboncopy Impact Dashboard</SidebarGroupLabel>
 					<SidebarGroupContent>
 						{data.navMain.map((item) => {
 							// Render collapsible items

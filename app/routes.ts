@@ -9,6 +9,8 @@ export default [
 		route("waste", "routes/refi/waste.tsx"),
 		route("investment", "routes/refi/investment.tsx"),
 		route("grants", "routes/refi/grants.tsx"),
+		route("lending", "routes/refi/lending.tsx"),
+		route("ubi", "routes/refi/ubi.tsx"),
 		route("renewable-energy", "routes/refi/renewable-energy.tsx"),
 		route("venture-funding", "routes/refi/venture-funding.tsx"),
 	]),

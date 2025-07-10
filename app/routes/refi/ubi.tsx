@@ -72,34 +72,25 @@ const lineChartConfig = {
 } satisfies ChartConfig;
 
 export function meta() {
-	return [{ title: "Waste | Carboncopy Impact Dashboard" }];
+	return [{ title: "UBI | Carboncopy Impact Dashboard" }];
 }
 
 export async function loader() {
-	const waste = fetch(
-		"https://django-api-usio.onrender.com/api/aggregate-metrics/waste",
+	const res = await fetch(
+		"https://django-api-usio.onrender.com/api/aggregate-metrics/ubi",
 	);
-	const wasteX = fetch(
-		"https://django-api-usio.onrender.com/api/aggregate-metrics/wasteX",
-	);
-	const [wasteRes, wasteXRes] = await Promise.all([waste, wasteX]);
-	const [wasteData, wasteXData] = await Promise.all([
-		wasteRes.json(),
-		wasteXRes.json(),
-	]);
-
-	return { wasteData, wasteXData };
+	const data = await res.json();
+	return { data };
 }
 
-export default function Waste() {
-	const { wasteData, wasteXData } = useLoaderData<typeof loader>();
-	const { sum, count } = wasteData;
-	const { sum: actions } = wasteXData;
+export default function UBI() {
+	const { data } = useLoaderData<typeof loader>();
+	const { sum, count } = data;
 
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden relative">
 			<div>
-				<h2 className="md:text-[27px] text-[17px] font-[500]">Waste</h2>
+				<h2 className="md:text-[27px] text-[17px] font-[500]">UBI</h2>
 				{/* Fixed grid layout - single column on mobile, proper sizing on desktop */}
 				<div className="grid auto-rows-min gap-4 grid-cols-1 md:grid-cols-[1.3fr_1fr]">
 					{/* Line Chart Container - Fixed width constraints */}
@@ -179,23 +170,22 @@ export default function Waste() {
 				<div className="grid auto-rows-min gap-4 md:grid-cols-4">
 					<div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
 						<p className={`text-[20px] md:text-[30px] font-bold text-center`}>
-							{Number(sum).toLocaleString()}{" "}
-							<span className="text-[10px] md:text-[15px] font-normal">t</span>
+							${Number(sum).toLocaleString()}
 						</p>
 						<p
 							className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
 						>
-							Waste Collected
+							Income distributed
 						</p>
 					</div>
 					<div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
 						<p className={`text-[20px] md:text-[30px] font-bold text-center`}>
-							{Number(actions).toLocaleString()}
+							{Number(4239).toLocaleString()}
 						</p>
 						<p
 							className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
 						>
-							Actions
+							Grants to Impact Projects
 						</p>
 					</div>
 					<div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
