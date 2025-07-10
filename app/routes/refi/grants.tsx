@@ -86,7 +86,7 @@ export async function loader() {
 export default function Grants() {
 	const { data } = useLoaderData<typeof loader>();
 	const { sum, count } = data;
-	console.log(data);
+
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden relative">
 			<div>

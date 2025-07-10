@@ -1,3 +1,4 @@
+import { useLoaderData } from "react-router";
 import {
 	CartesianGrid,
 	Line,
@@ -73,7 +74,19 @@ const lineChartConfig = {
 export function meta() {
 	return [{ title: "Waste | Carboncopy Impact Dashboard" }];
 }
+
+export async function loader() {
+	const res = await fetch(
+		"https://django-api-usio.onrender.com/api/aggregate-metrics/waste",
+	);
+	const data = await res.json();
+	return { data };
+}
+
 export default function Waste() {
+	const { data } = useLoaderData<typeof loader>();
+	const { sum, count } = data;
+
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden relative">
 			<div>
@@ -157,7 +170,7 @@ export default function Waste() {
 				<div className="grid auto-rows-min gap-4 md:grid-cols-4">
 					<div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
 						<p className={`text-[20px] md:text-[30px] font-bold text-center`}>
-							{Number(3400).toLocaleString()}{" "}
+							{Number(sum).toLocaleString()}{" "}
 							<span className="text-[10px] md:text-[15px] font-normal">t</span>
 						</p>
 						<p
@@ -178,7 +191,7 @@ export default function Waste() {
 					</div>
 					<div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
 						<p className={`text-[30px] md:text-[40px] font-bold text-center`}>
-							12
+							{count}
 						</p>
 						<p
 							className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
