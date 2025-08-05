@@ -65,7 +65,7 @@ export default function Projects() {
 							</div>
 							<a
 								target="_blank"
-								href={`https://carboncopy.news/project/${item.slug}`}
+								href={`https://carboncopy.news/project/${item.slug}/`}
 								className={`absolute bottom-3  text-yellow-500 hover:underline`}
 							>
 								Details
