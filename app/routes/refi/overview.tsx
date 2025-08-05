@@ -1,3 +1,11 @@
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "~/components/ui/table";
+
 export function meta() {
   return [
     {
@@ -89,7 +97,16 @@ export default function Overview() {
       </div>
       <div className="h-fit w-full min-h-[100vh] flex flex-col flex-1 md:min-h-min space-y-2">
         <h2 className="text-[22px] font-bold">Activity</h2>
-        <div className="flex-1 rounded-xl bg-muted/50 p-6" />
+        <Table>
+          <TableHeader className="w-full rounded-xl bg-muted/50">
+            <TableRow>
+              <TableHead className="w-[50%]">Deliverable</TableHead>
+              <TableHead className="w-[30%]">Project</TableHead>
+              <TableHead>Date</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="w-full rounded-xl bg-muted/50 p-6"></TableBody>
+        </Table>
       </div>
     </div>
   );
