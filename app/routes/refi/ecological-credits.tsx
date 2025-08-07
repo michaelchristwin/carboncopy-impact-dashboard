@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useLoaderData } from "react-router";
+import { Suspense, useState } from "react";
+import { Await, useLoaderData } from "react-router";
 import {
   CartesianGrid,
   Line,
@@ -33,6 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { Skeleton } from "~/components/ui/skeleton";
 
 const chartData = [
   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
@@ -99,27 +100,19 @@ export function meta() {
 }
 
 export async function loader() {
-  const eco_cred = fetch(
-    "https://carboncopy-66xo.onrender.com/api/aggregate-metrics/issued-cred"
+  const eco_cred = fetch("http://localhost:8000/api/aggregate-metrics/1").then(
+    (res) => res.json()
   );
   const retired_cred = fetch(
-    "https://carboncopy-66xo.onrender.com/api/aggregate-metrics/retired-cred"
-  );
+    "http://localhost:8000/api/aggregate-metrics/1"
+  ).then((res) => res.json());
 
-  const [ecoRes, retiredRes] = await Promise.all([eco_cred, retired_cred]);
-
-  const [ecoData, retiredData] = await Promise.all([
-    ecoRes.json(),
-    retiredRes.json(),
-  ]);
-
-  return { ecoData, retiredData };
+  return { eco_cred, retired_cred };
 }
 
 export default function EcologicalCredits() {
-  const { ecoData, retiredData } = useLoaderData<typeof loader>();
-  const { sum, count } = ecoData;
-  const { sum: retired_sum } = retiredData;
+  const { eco_cred, retired_cred } = useLoaderData<typeof loader>();
+
   const [activeOption, setActiveOption] = useState("option1");
 
   return (
@@ -252,9 +245,18 @@ export default function EcologicalCredits() {
       <div className={``}>
         <div className="grid auto-rows-min gap-4 md:grid-cols-4">
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-            <p className={`text-[30px] md:text-[40px] font-bold text-center`}>
-              {Number(sum).toLocaleString()}
-            </p>
+            <Suspense fallback={<Skeleton className="h-[30px] w-[70px]" />}>
+              <Await
+                resolve={eco_cred}
+                children={(data) => (
+                  <p
+                    className={`text-[30px] md:text-[40px] font-bold text-center`}
+                  >
+                    {Number(data.count).toLocaleString()}
+                  </p>
+                )}
+              />
+            </Suspense>
             <p
               className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
             >
@@ -262,9 +264,18 @@ export default function EcologicalCredits() {
             </p>
           </div>
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-            <p className={`text-[30px] md:text-[40px] font-bold text-center`}>
-              {Number(retired_sum).toLocaleString()}
-            </p>
+            <Suspense fallback={<Skeleton className="h-[30px] w-[70px]" />}>
+              <Await
+                resolve={retired_cred}
+                children={(data) => (
+                  <p
+                    className={`text-[30px] md:text-[40px] font-bold text-center`}
+                  >
+                    {Number(data.sum).toLocaleString()}
+                  </p>
+                )}
+              />
+            </Suspense>
             <p
               className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
             >
@@ -282,9 +293,18 @@ export default function EcologicalCredits() {
             </p>
           </div>
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-            <p className={`text-[30px] md:text-[40px] font-bold text-center`}>
-              {Number(count).toLocaleString()}
-            </p>
+            <Suspense fallback={<Skeleton className="h-[30px] w-[70px]" />}>
+              <Await
+                resolve={eco_cred}
+                children={(data) => (
+                  <p
+                    className={`text-[30px] md:text-[40px] font-bold text-center`}
+                  >
+                    {Number(data.sum).toLocaleString()}
+                  </p>
+                )}
+              />
+            </Suspense>
             <p
               className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
             >
