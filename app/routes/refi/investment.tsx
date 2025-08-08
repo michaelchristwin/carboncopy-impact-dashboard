@@ -1,4 +1,5 @@
-import { useLoaderData } from "react-router";
+import { Suspense } from "react";
+import { Await, useLoaderData } from "react-router";
 import {
   CartesianGrid,
   Line,
@@ -8,6 +9,8 @@ import {
   ResponsiveContainer,
   XAxis,
 } from "recharts";
+import { ErrorElement } from "~/components/ErrorElements";
+import { DoubleSkeleton } from "~/components/Skeletons";
 import {
   type ChartConfig,
   ChartContainer,
@@ -82,17 +85,16 @@ export function meta() {
   return [{ title: "Investment | Carboncopy Impact Dashboard" }];
 }
 
-export async function loader() {
-  const res = await fetch(
-    "https://carboncopy-66xo.onrender.com/api/aggregate-metrics/investments"
-  );
-  const data = await res.json();
-  return { data };
+export function loader() {
+  const investment = fetch(
+    "http://localhost:8000/api/aggregate-metrics/4"
+  ).then((res) => res.json());
+
+  return { investment };
 }
 
 export default function Investment() {
-  const { data } = useLoaderData<typeof loader>();
-  const { sum, count } = data;
+  const { investment } = useLoaderData<typeof loader>();
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden relative">
@@ -176,14 +178,26 @@ export default function Investment() {
       <div className={``}>
         <div className="grid auto-rows-min gap-4 md:grid-cols-4">
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-            <p className={`text-[20px] md:text-[30px] font-bold text-center`}>
-              ${Number(sum).toLocaleString()}
-            </p>
-            <p
-              className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
-            >
-              Invested in Climate Projects
-            </p>
+            <Suspense fallback={<DoubleSkeleton />}>
+              <Await
+                resolve={investment}
+                errorElement={<ErrorElement />}
+                children={(data) => (
+                  <>
+                    <p
+                      className={`text-[20px] md:text-[30px] font-bold text-center`}
+                    >
+                      ${Number(data.sum).toLocaleString()}
+                    </p>
+                    <p
+                      className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
+                    >
+                      Invested in Climate Projects
+                    </p>
+                  </>
+                )}
+              />
+            </Suspense>
           </div>
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
             <p className={`text-[20px] md:text-[30px] font-bold text-center`}>
@@ -196,14 +210,26 @@ export default function Investment() {
             </p>
           </div>
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-            <p className={`text-[30px] md:text-[40px] font-bold text-center`}>
-              {count}
-            </p>
-            <p
-              className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
-            >
-              Projects Reporting
-            </p>
+            <Suspense fallback={<DoubleSkeleton />}>
+              <Await
+                resolve={investment}
+                errorElement={<ErrorElement />}
+                children={(data) => (
+                  <>
+                    <p
+                      className={`text-[30px] md:text-[40px] font-bold text-center`}
+                    >
+                      {Number(data.count).toLocaleString()}
+                    </p>
+                    <p
+                      className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
+                    >
+                      Projects Reporting
+                    </p>
+                  </>
+                )}
+              />
+            </Suspense>
           </div>
         </div>
       </div>

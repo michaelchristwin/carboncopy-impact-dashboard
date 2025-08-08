@@ -1,4 +1,5 @@
-import { useLoaderData } from "react-router";
+import { Suspense } from "react";
+import { Await, useLoaderData } from "react-router";
 import {
   CartesianGrid,
   Line,
@@ -8,6 +9,8 @@ import {
   ResponsiveContainer,
   XAxis,
 } from "recharts";
+import { ErrorElement } from "~/components/ErrorElements";
+import { DoubleSkeleton } from "~/components/Skeletons";
 import {
   type ChartConfig,
   ChartContainer,
@@ -75,17 +78,16 @@ export function meta() {
   return [{ title: "UBI | Carboncopy Impact Dashboard" }];
 }
 
-export async function loader() {
-  const res = await fetch(
-    "https://carboncopy-66xo.onrender.com/api/aggregate-metrics/ubi"
+export function loader() {
+  const ubi = fetch("http://localhost:8000/api/aggregate-metrics/2").then(
+    (res) => res.json()
   );
-  const data = await res.json();
-  return { data };
+
+  return { ubi };
 }
 
 export default function UBI() {
-  const { data } = useLoaderData<typeof loader>();
-  const { sum, count } = data;
+  const { ubi } = useLoaderData<typeof loader>();
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden relative">
@@ -169,14 +171,26 @@ export default function UBI() {
       <div className={``}>
         <div className="grid auto-rows-min gap-4 md:grid-cols-4">
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-            <p className={`text-[20px] md:text-[30px] font-bold text-center`}>
-              ${Number(sum).toLocaleString()}
-            </p>
-            <p
-              className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
-            >
-              Income distributed
-            </p>
+            <Suspense fallback={<DoubleSkeleton />}>
+              <Await
+                resolve={ubi}
+                errorElement={<ErrorElement />}
+                children={(data) => (
+                  <>
+                    <p
+                      className={`text-[20px] md:text-[30px] font-bold text-center`}
+                    >
+                      ${Number(data.sum).toLocaleString()}
+                    </p>
+                    <p
+                      className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
+                    >
+                      Income distributed
+                    </p>
+                  </>
+                )}
+              />
+            </Suspense>
           </div>
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
             <p className={`text-[20px] md:text-[30px] font-bold text-center`}>
@@ -189,14 +203,26 @@ export default function UBI() {
             </p>
           </div>
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-            <p className={`text-[30px] md:text-[40px] font-bold text-center`}>
-              {count}
-            </p>
-            <p
-              className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
-            >
-              Projects Reporting
-            </p>
+            <Suspense fallback={<DoubleSkeleton />}>
+              <Await
+                resolve={ubi}
+                errorElement={<ErrorElement />}
+                children={(data) => (
+                  <>
+                    <p
+                      className={`text-[30px] md:text-[40px] font-bold text-center`}
+                    >
+                      {data.count}
+                    </p>
+                    <p
+                      className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
+                    >
+                      Projects Reporting
+                    </p>
+                  </>
+                )}
+              />
+            </Suspense>
           </div>
         </div>
       </div>

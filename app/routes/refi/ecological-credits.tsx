@@ -100,7 +100,7 @@ export function meta() {
   return [{ title: "Ecological Credits | Carboncopy Impact Dashboard" }];
 }
 
-export async function loader() {
+export function loader() {
   const eco_cred = fetch("http://localhost:8000/api/aggregate-metrics/1").then(
     (res) => res.json()
   );

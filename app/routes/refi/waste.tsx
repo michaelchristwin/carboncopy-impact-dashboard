@@ -85,7 +85,7 @@ export function meta() {
   return [{ title: "Waste | Carboncopy Impact Dashboard" }];
 }
 
-export async function loader() {
+export function loader() {
   const waste = fetch("http://localhost:8000/api/aggregate-metrics/4").then(
     (res) => res.json()
   );
