@@ -1,4 +1,5 @@
-import { useLoaderData } from "react-router";
+import { Suspense } from "react";
+import { Await, useLoaderData } from "react-router";
 import {
   CartesianGrid,
   Line,
@@ -8,6 +9,8 @@ import {
   ResponsiveContainer,
   XAxis,
 } from "recharts";
+import { ErrorElement } from "~/components/ErrorElements";
+import { DoubleSkeleton } from "~/components/Skeletons";
 import {
   type ChartConfig,
   ChartContainer,
@@ -83,25 +86,18 @@ export function meta() {
 }
 
 export async function loader() {
-  const waste = fetch(
-    "https://carboncopy-66xo.onrender.com/api/aggregate-metrics/waste"
+  const waste = fetch("http://localhost:8000/api/aggregate-metrics/4").then(
+    (res) => res.json()
   );
-  const wasteX = fetch(
-    "https://carboncopy-66xo.onrender.com/api/aggregate-metrics/wasteX"
+  const wasteX = fetch("http://localhost:8000/api/aggregate-metrics/5").then(
+    (res) => res.json()
   );
-  const [wasteRes, wasteXRes] = await Promise.all([waste, wasteX]);
-  const [wasteData, wasteXData] = await Promise.all([
-    wasteRes.json(),
-    wasteXRes.json(),
-  ]);
 
-  return { wasteData, wasteXData };
+  return { waste, wasteX };
 }
 
 export default function Waste() {
-  const { wasteData, wasteXData } = useLoaderData<typeof loader>();
-  const { sum, count } = wasteData;
-  const { sum: actions } = wasteXData;
+  const { waste, wasteX } = useLoaderData<typeof loader>();
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden relative">
@@ -185,35 +181,73 @@ export default function Waste() {
       <div className={``}>
         <div className="grid auto-rows-min gap-4 md:grid-cols-4">
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-            <p className={`text-[20px] md:text-[30px] font-bold text-center`}>
-              {Number(sum).toLocaleString()}{" "}
-              <span className="text-[10px] md:text-[15px] font-normal">t</span>
-            </p>
-            <p
-              className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
-            >
-              Waste Collected
-            </p>
+            <Suspense fallback={<DoubleSkeleton />}>
+              <Await
+                resolve={waste}
+                errorElement={<ErrorElement />}
+                children={(data) => (
+                  <>
+                    <p
+                      className={`text-[20px] md:text-[30px] font-bold text-center`}
+                    >
+                      {Number(data.sum).toLocaleString()}{" "}
+                      <span className="text-[10px] md:text-[15px] font-normal">
+                        t
+                      </span>
+                    </p>
+                    <p
+                      className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
+                    >
+                      Waste Collected
+                    </p>
+                  </>
+                )}
+              />
+            </Suspense>
           </div>
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-            <p className={`text-[20px] md:text-[30px] font-bold text-center`}>
-              {Number(actions).toLocaleString()}
-            </p>
-            <p
-              className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
-            >
-              Actions
-            </p>
+            <Suspense fallback={<DoubleSkeleton />}>
+              <Await
+                resolve={wasteX}
+                errorElement={<ErrorElement />}
+                children={(data) => (
+                  <>
+                    <p
+                      className={`text-[20px] md:text-[30px] font-bold text-center`}
+                    >
+                      {Number(data.sum).toLocaleString()}
+                    </p>
+                    <p
+                      className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
+                    >
+                      Actions
+                    </p>
+                  </>
+                )}
+              />
+            </Suspense>
           </div>
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-            <p className={`text-[30px] md:text-[40px] font-bold text-center`}>
-              {count}
-            </p>
-            <p
-              className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
-            >
-              Projects Reporting
-            </p>
+            <Suspense fallback={<DoubleSkeleton />}>
+              <Await
+                resolve={waste}
+                errorElement={<ErrorElement />}
+                children={(data) => (
+                  <>
+                    <p
+                      className={`text-[30px] md:text-[40px] font-bold text-center`}
+                    >
+                      {data.count}
+                    </p>
+                    <p
+                      className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
+                    >
+                      Projects Reporting
+                    </p>
+                  </>
+                )}
+              />
+            </Suspense>
           </div>
         </div>
       </div>

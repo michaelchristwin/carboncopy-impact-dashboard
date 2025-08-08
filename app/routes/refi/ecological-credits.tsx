@@ -33,7 +33,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Skeleton } from "~/components/ui/skeleton";
+import { DoubleSkeleton } from "~/components/Skeletons";
+import { ErrorElement } from "~/components/ErrorElements";
 
 const chartData = [
   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
@@ -104,7 +105,7 @@ export async function loader() {
     (res) => res.json()
   );
   const retired_cred = fetch(
-    "http://localhost:8000/api/aggregate-metrics/1"
+    "http://localhost:8000/api/aggregate-metrics/2"
   ).then((res) => res.json());
 
   return { eco_cred, retired_cred };
@@ -245,42 +246,48 @@ export default function EcologicalCredits() {
       <div className={``}>
         <div className="grid auto-rows-min gap-4 md:grid-cols-4">
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-            <Suspense fallback={<Skeleton className="h-[30px] w-[70px]" />}>
+            <Suspense fallback={<DoubleSkeleton />}>
               <Await
                 resolve={eco_cred}
+                errorElement={<ErrorElement />}
                 children={(data) => (
-                  <p
-                    className={`text-[30px] md:text-[40px] font-bold text-center`}
-                  >
-                    {Number(data.count).toLocaleString()}
-                  </p>
+                  <>
+                    <p
+                      className={`text-[30px] md:text-[40px] font-bold text-center`}
+                    >
+                      {Number(data.count).toLocaleString()}
+                    </p>
+                    <p
+                      className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
+                    >
+                      Issued
+                    </p>
+                  </>
                 )}
               />
             </Suspense>
-            <p
-              className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
-            >
-              Issued
-            </p>
           </div>
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-            <Suspense fallback={<Skeleton className="h-[30px] w-[70px]" />}>
+            <Suspense fallback={<DoubleSkeleton />}>
               <Await
                 resolve={retired_cred}
+                errorElement={<ErrorElement />}
                 children={(data) => (
-                  <p
-                    className={`text-[30px] md:text-[40px] font-bold text-center`}
-                  >
-                    {Number(data.sum).toLocaleString()}
-                  </p>
+                  <>
+                    <p
+                      className={`text-[30px] md:text-[40px] font-bold text-center`}
+                    >
+                      {Number(data.sum).toLocaleString()}
+                    </p>
+                    <p
+                      className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
+                    >
+                      Retired
+                    </p>
+                  </>
                 )}
               />
             </Suspense>
-            <p
-              className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
-            >
-              Retired
-            </p>
           </div>
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
             <p className={`text-[30px] md:text-[40px] font-bold text-center`}>
@@ -293,23 +300,26 @@ export default function EcologicalCredits() {
             </p>
           </div>
           <div className="h-40 rounded-xl bg-muted/50 p-6 flex flex-col justify-center items-center">
-            <Suspense fallback={<Skeleton className="h-[30px] w-[70px]" />}>
+            <Suspense fallback={<DoubleSkeleton />}>
               <Await
                 resolve={eco_cred}
+                errorElement={<ErrorElement />}
                 children={(data) => (
-                  <p
-                    className={`text-[30px] md:text-[40px] font-bold text-center`}
-                  >
-                    {Number(data.sum).toLocaleString()}
-                  </p>
+                  <>
+                    <p
+                      className={`text-[30px] md:text-[40px] font-bold text-center`}
+                    >
+                      {Number(data.sum).toLocaleString()}
+                    </p>
+                    <p
+                      className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
+                    >
+                      Projects reporting
+                    </p>
+                  </>
                 )}
               />
             </Suspense>
-            <p
-              className={`text-[14px] md:text-[16px] text-neutral-700 text-center`}
-            >
-              Projects reporting
-            </p>
           </div>
         </div>
       </div>
