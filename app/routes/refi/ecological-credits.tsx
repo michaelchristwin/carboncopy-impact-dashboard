@@ -8,6 +8,7 @@ import {
   PieChart,
   ResponsiveContainer,
   XAxis,
+  YAxis,
 } from "recharts";
 import {
   type ChartConfig,
@@ -35,6 +36,7 @@ import {
 } from "~/components/ui/select";
 import { DoubleSkeleton } from "~/components/Skeletons";
 import { ErrorElement } from "~/components/ErrorElements";
+import { aggregateByMonth } from "~/lib/utils";
 
 const chartData = [
   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
@@ -70,23 +72,10 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const lineChartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-];
-
 const lineChartConfig = {
-  desktop: {
-    label: "Desktop",
+  value: {
+    label: "Value",
     color: "var(--chart-1)",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "var(--chart-2)",
   },
 } satisfies ChartConfig;
 
@@ -101,6 +90,9 @@ export function meta() {
 }
 
 export function loader() {
+  const chartsData = fetch(
+    "http://localhost:8000/api/project-metrics-timeseries/2"
+  ).then((res) => res.json());
   const eco_cred = fetch("http://localhost:8000/api/aggregate-metrics/1").then(
     (res) => res.json()
   );
@@ -108,11 +100,11 @@ export function loader() {
     "http://localhost:8000/api/aggregate-metrics/2"
   ).then((res) => res.json());
 
-  return { eco_cred, retired_cred };
+  return { eco_cred, retired_cred, chartsData };
 }
 
 export default function EcologicalCredits() {
-  const { eco_cred, retired_cred } = useLoaderData<typeof loader>();
+  const { eco_cred, retired_cred, chartsData } = useLoaderData<typeof loader>();
 
   const [activeOption, setActiveOption] = useState("option1");
 
@@ -172,50 +164,63 @@ export default function EcologicalCredits() {
         <div className="grid auto-rows-min gap-4 grid-cols-1 md:grid-cols-[1.3fr_1fr]">
           {/* Line Chart Container - Fixed width constraints */}
           <div className="h-82 rounded-xl bg-muted/50 p-2 min-w-0 overflow-hidden">
-            <ChartContainer
-              config={lineChartConfig}
-              className="w-full h-full relative min-w-0"
-            >
-              <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-                <LineChart
-                  accessibilityLayer
-                  data={lineChartData}
-                  margin={{
-                    left: 12,
-                    right: 12,
-                    top: 8,
-                    bottom: 8,
-                  }}
-                >
-                  <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="month"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    tickFormatter={(value) => value.slice(0, 3)}
-                  />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent />}
-                  />
-                  <Line
-                    dataKey="desktop"
-                    type="monotone"
-                    stroke="var(--color-desktop)"
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                  <Line
-                    dataKey="mobile"
-                    type="monotone"
-                    stroke="var(--color-mobile)"
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+            <Suspense fallback={<div></div>}>
+              <Await
+                resolve={chartsData}
+                errorElement={<div></div>}
+                children={(data) => {
+                  const currentYear = new Date().getFullYear();
+
+                  const filteredData = data.results.filter((item: any) => {
+                    const year = new Date(item.timestamp).getFullYear();
+                    return year === currentYear;
+                  });
+                  const lineChartData = aggregateByMonth(filteredData);
+                  return (
+                    <ChartContainer
+                      config={lineChartConfig}
+                      className="w-full h-full relative min-w-0"
+                    >
+                      <ResponsiveContainer
+                        width="100%"
+                        height="100%"
+                        minWidth={0}
+                      >
+                        <LineChart
+                          accessibilityLayer
+                          data={lineChartData}
+                          margin={{
+                            left: 12,
+                            right: 12,
+                            top: 8,
+                            bottom: 8,
+                          }}
+                        >
+                          <CartesianGrid vertical={false} />
+                          <XAxis
+                            dataKey="period"
+                            tickMargin={8}
+                            tickFormatter={(value) => value.slice(0, 3)}
+                          />
+                          <YAxis />
+                          <ChartTooltip
+                            cursor={false}
+                            content={<ChartTooltipContent />}
+                          />
+                          <Line
+                            dataKey="value"
+                            type="monotone"
+                            stroke="#3B82F6"
+                            strokeWidth={2}
+                            dot={false}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </ChartContainer>
+                  );
+                }}
+              />
+            </Suspense>
           </div>
 
           {/* Pie Chart Container - Fixed width constraints */}
