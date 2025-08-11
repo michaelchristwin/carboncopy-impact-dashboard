@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-interface DataPoint {
+export interface DataPoint {
   timestamp: string;
   value: number;
 }
@@ -17,9 +17,13 @@ interface GroupedData {
 
 export const aggregateByMonth = (data: DataPoint[]) => {
   const monthlyGroups: Record<string, GroupedData> = {};
-
+  const currentYear = new Date().getFullYear();
+  const filteredData = data.filter((item: any) => {
+    const year = new Date(item.timestamp).getFullYear();
+    return year === currentYear;
+  });
   // Group by YYYY-MM
-  data.forEach((item) => {
+  filteredData.forEach((item) => {
     const date = new Date(item.timestamp);
     const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 
@@ -84,10 +88,12 @@ export const aggregateByYear = (data: DataPoint[]) => {
       const values = yearlyGroups[year].values;
 
       return {
-        period: year, // Keep as number for easy sorting
+        period: year.toString(), // Keep as number for easy sorting
         value: values.reduce((sum, val) => sum + val, 0), // Sum for the year
         count: values.length,
+        sortKey: year,
       };
     })
-    .sort((a, b) => a.period - b.period);
+    .sort((a, b) => a.sortKey - b.sortKey)
+    .map(({ sortKey, ...rest }) => rest);
 };

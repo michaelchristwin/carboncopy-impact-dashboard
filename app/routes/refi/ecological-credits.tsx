@@ -36,7 +36,8 @@ import {
 } from "~/components/ui/select";
 import { DoubleSkeleton } from "~/components/Skeletons";
 import { ErrorElement } from "~/components/ErrorElements";
-import { aggregateByMonth } from "~/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { aggregateByMonth, aggregateByYear, type DataPoint } from "~/lib/utils";
 
 const chartData = [
   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
@@ -107,6 +108,12 @@ export default function EcologicalCredits() {
   const { eco_cred, retired_cred, chartsData } = useLoaderData<typeof loader>();
 
   const [activeOption, setActiveOption] = useState("option1");
+  const [lineChartMode, setLineChartMode] = useState("monthly");
+  const getChartData = (data: DataPoint[]) => {
+    return lineChartMode === "monthly"
+      ? aggregateByMonth(data)
+      : aggregateByYear(data);
+  };
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden relative">
@@ -163,23 +170,18 @@ export default function EcologicalCredits() {
         {/* Fixed grid layout - single column on mobile, proper sizing on desktop */}
         <div className="grid auto-rows-min gap-4 grid-cols-1 md:grid-cols-[1.3fr_1fr]">
           {/* Line Chart Container - Fixed width constraints */}
-          <div className="h-82 rounded-xl bg-muted/50 p-2 min-w-0 overflow-hidden">
+          <div className="h-82 flex flex-col p-2 min-w-0 overflow-hidden">
             <Suspense fallback={<div></div>}>
               <Await
+                key={lineChartMode}
                 resolve={chartsData}
                 errorElement={<div></div>}
                 children={(data) => {
-                  const currentYear = new Date().getFullYear();
-
-                  const filteredData = data.results.filter((item: any) => {
-                    const year = new Date(item.timestamp).getFullYear();
-                    return year === currentYear;
-                  });
-                  const lineChartData = aggregateByMonth(filteredData);
+                  const lineChartData = getChartData(data.results);
                   return (
                     <ChartContainer
                       config={lineChartConfig}
-                      className="w-full h-full relative min-w-0"
+                      className="w-full h-70 bg-muted/50 rounded-xl relative min-w-0"
                     >
                       <ResponsiveContainer
                         width="100%"
@@ -221,6 +223,17 @@ export default function EcologicalCredits() {
                 }}
               />
             </Suspense>
+            <div className="mt-1 flex w-full justify-center items-center">
+              <Tabs
+                defaultValue="monthly"
+                onValueChange={(v) => setLineChartMode(v)}
+              >
+                <TabsList>
+                  <TabsTrigger value="monthly">Monthly</TabsTrigger>
+                  <TabsTrigger value="yearly">Yearly</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
           </div>
 
           {/* Pie Chart Container - Fixed width constraints */}
