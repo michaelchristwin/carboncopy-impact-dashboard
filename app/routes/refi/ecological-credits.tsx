@@ -34,9 +34,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { DoubleSkeleton } from "~/components/Skeletons";
-import { ErrorElement } from "~/components/ErrorElements";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { DoubleSkeleton, LineChartSkeleton } from "~/components/Skeletons";
+import {
+  ErrorElement,
+  LineChartErrorElement,
+} from "~/components/ErrorElements";
+import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { aggregateByMonth, aggregateByYear, type DataPoint } from "~/lib/utils";
 
 const chartData = [
@@ -92,7 +95,7 @@ export function meta() {
 
 export function loader() {
   const chartsData = fetch(
-    "http://localhost:8000/api/project-metrics-timeseries/2"
+    "http://localhost:8000/api/project-metrics-timeseries/1"
   ).then((res) => res.json());
   const eco_cred = fetch("http://localhost:8000/api/aggregate-metrics/1").then(
     (res) => res.json()
@@ -170,18 +173,18 @@ export default function EcologicalCredits() {
         {/* Fixed grid layout - single column on mobile, proper sizing on desktop */}
         <div className="grid auto-rows-min gap-4 grid-cols-1 md:grid-cols-[1.3fr_1fr]">
           {/* Line Chart Container - Fixed width constraints */}
-          <div className="h-82 flex flex-col p-2 min-w-0 overflow-hidden">
-            <Suspense fallback={<div></div>}>
+          <div className="h-82 p-2 min-w-0 overflow-hidden bg-muted/50 rounded-xl">
+            <Suspense fallback={<LineChartSkeleton />}>
               <Await
                 key={lineChartMode}
                 resolve={chartsData}
-                errorElement={<div></div>}
+                errorElement={<LineChartErrorElement />}
                 children={(data) => {
                   const lineChartData = getChartData(data.results);
                   return (
                     <ChartContainer
                       config={lineChartConfig}
-                      className="w-full h-70 bg-muted/50 rounded-xl relative min-w-0"
+                      className="w-full h-70 relative min-w-0"
                     >
                       <ResponsiveContainer
                         width="100%"
@@ -202,7 +205,11 @@ export default function EcologicalCredits() {
                           <XAxis
                             dataKey="period"
                             tickMargin={8}
-                            tickFormatter={(value) => value.slice(0, 3)}
+                            tickFormatter={(value) =>
+                              lineChartMode === "monthly"
+                                ? value.slice(0, 3)
+                                : value
+                            }
                           />
                           <YAxis />
                           <ChartTooltip

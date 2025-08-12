@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { Await, useLoaderData } from "react-router";
 import {
   CartesianGrid,
@@ -8,9 +8,13 @@ import {
   PieChart,
   ResponsiveContainer,
   XAxis,
+  YAxis,
 } from "recharts";
-import { ErrorElement } from "~/components/ErrorElements";
-import { DoubleSkeleton } from "~/components/Skeletons";
+import {
+  ErrorElement,
+  LineChartErrorElement,
+} from "~/components/ErrorElements";
+import { DoubleSkeleton, LineChartSkeleton } from "~/components/Skeletons";
 import {
   type ChartConfig,
   ChartContainer,
@@ -26,6 +30,8 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { aggregateByMonth, aggregateByYear, type DataPoint } from "~/lib/utils";
 
 const chartData = [
   { chain: "evm", funding: 275, fill: "rgb(52, 152, 219)" },
@@ -61,23 +67,10 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const lineChartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-];
-
 const lineChartConfig = {
-  desktop: {
-    label: "Desktop",
+  value: {
+    label: "Value",
     color: "var(--chart-1)",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "var(--chart-2)",
   },
 } satisfies ChartConfig;
 
@@ -86,15 +79,24 @@ export function meta() {
 }
 
 export function loader() {
+  const chartsData = fetch(
+    "http://localhost:8000/api/project-metrics-timeseries/1"
+  ).then((res) => res.json());
   const renewable_energy = fetch(
     "http://localhost:8000/api/aggregate-metrics/4"
   ).then((res) => res.json());
 
-  return { renewable_energy };
+  return { renewable_energy, chartsData };
 }
 
 export default function RenewableEnergy() {
-  const { renewable_energy } = useLoaderData<typeof loader>();
+  const { renewable_energy, chartsData } = useLoaderData<typeof loader>();
+  const [lineChartMode, setLineChartMode] = useState("monthly");
+  const getChartData = (data: DataPoint[]) => {
+    return lineChartMode === "monthly"
+      ? aggregateByMonth(data)
+      : aggregateByYear(data);
+  };
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 overflow-x-hidden relative">
@@ -106,50 +108,73 @@ export default function RenewableEnergy() {
         <div className="grid auto-rows-min gap-4 grid-cols-1 md:grid-cols-[1.3fr_1fr]">
           {/* Line Chart Container - Fixed width constraints */}
           <div className="h-82 rounded-xl bg-muted/50 p-2 min-w-0 overflow-hidden">
-            <ChartContainer
-              config={lineChartConfig}
-              className="w-full h-full relative min-w-0"
-            >
-              <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-                <LineChart
-                  accessibilityLayer
-                  data={lineChartData}
-                  margin={{
-                    left: 12,
-                    right: 12,
-                    top: 8,
-                    bottom: 8,
-                  }}
-                >
-                  <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="month"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    tickFormatter={(value) => value.slice(0, 3)}
-                  />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent />}
-                  />
-                  <Line
-                    dataKey="desktop"
-                    type="monotone"
-                    stroke="var(--color-desktop)"
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                  <Line
-                    dataKey="mobile"
-                    type="monotone"
-                    stroke="var(--color-mobile)"
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+            <Suspense fallback={<LineChartSkeleton />}>
+              <Await
+                key={lineChartMode}
+                resolve={chartsData}
+                errorElement={<LineChartErrorElement />}
+                children={(data) => {
+                  const lineChartData = getChartData(data.results);
+                  return (
+                    <ChartContainer
+                      config={lineChartConfig}
+                      className="w-full h-70 relative min-w-0"
+                    >
+                      <ResponsiveContainer
+                        width="100%"
+                        height="100%"
+                        minWidth={0}
+                      >
+                        <LineChart
+                          accessibilityLayer
+                          data={lineChartData}
+                          margin={{
+                            left: 12,
+                            right: 12,
+                            top: 8,
+                            bottom: 8,
+                          }}
+                        >
+                          <CartesianGrid vertical={false} />
+                          <XAxis
+                            dataKey="period"
+                            tickMargin={8}
+                            tickFormatter={(value) =>
+                              lineChartMode === "monthly"
+                                ? value.slice(0, 3)
+                                : value
+                            }
+                          />
+                          <YAxis />
+                          <ChartTooltip
+                            cursor={false}
+                            content={<ChartTooltipContent />}
+                          />
+                          <Line
+                            dataKey="value"
+                            type="monotone"
+                            stroke="#3B82F6"
+                            strokeWidth={2}
+                            dot={false}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </ChartContainer>
+                  );
+                }}
+              />
+            </Suspense>
+            <div className="mt-1 flex w-full justify-center items-center">
+              <Tabs
+                defaultValue="monthly"
+                onValueChange={(v) => setLineChartMode(v)}
+              >
+                <TabsList>
+                  <TabsTrigger value="monthly">Monthly</TabsTrigger>
+                  <TabsTrigger value="yearly">Yearly</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
           </div>
 
           {/* Pie Chart Container - Fixed width constraints */}
