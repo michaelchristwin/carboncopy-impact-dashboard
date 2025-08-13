@@ -9,7 +9,7 @@ import {
 export function meta() {
   return [
     {
-      title: "Overview | Carboncopy Impact Dashboard",
+      title: "Overview | CARBON Copy ReFi Impact Dashboard",
     },
   ];
 }

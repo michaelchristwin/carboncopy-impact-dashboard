@@ -90,7 +90,7 @@ const options = [
 ];
 
 export function meta() {
-  return [{ title: "Ecological Credits | Carboncopy Impact Dashboard" }];
+  return [{ title: "Ecological Credits | CARBON Copy ReFi Impact Dashboard" }];
 }
 
 export function loader() {

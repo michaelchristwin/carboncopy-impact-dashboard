@@ -68,7 +68,7 @@ const lineChartConfig = {
 } satisfies ChartConfig;
 
 export function meta() {
-  return [{ title: "UBI | Carboncopy Impact Dashboard" }];
+  return [{ title: "UBI | CARBON Copy ReFi Impact Dashboard" }];
 }
 
 export function loader() {

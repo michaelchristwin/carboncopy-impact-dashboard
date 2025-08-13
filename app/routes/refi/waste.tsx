@@ -75,7 +75,7 @@ const lineChartConfig = {
 } satisfies ChartConfig;
 
 export function meta() {
-  return [{ title: "Waste | Carboncopy Impact Dashboard" }];
+  return [{ title: "Waste | CARBON Copy ReFi Impact Dashboard" }];
 }
 
 export function loader() {

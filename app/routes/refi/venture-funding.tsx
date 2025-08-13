@@ -72,7 +72,7 @@ const lineChartConfig = {
 } satisfies ChartConfig;
 
 export function meta() {
-  return [{ title: "Venture Funding | Carboncopy Impact Dashboard" }];
+  return [{ title: "Venture Funding | CARBON Copy ReFi Impact Dashboard" }];
 }
 
 export function loader() {
